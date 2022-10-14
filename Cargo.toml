@@ -4,6 +4,7 @@ version = "0.0.1"
 edition = "2021"
 
 [workspace]
+members = ["agents/naive"]
 
 [dependencies]
 wasmer = "2.3.0"

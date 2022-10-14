@@ -2,7 +2,7 @@ use std::fs;
 use wasmer::{imports, Instance, Module, Store, Value};
 
 fn main() {
-    let path = "agents/naive/target/wasm32-unknown-unknown/release/naive.wasm";
+    let path = "target/wasm32-unknown-unknown/release/naive.wasm";
     let wasm_bytes = fs::read(&path).unwrap();
     let store = Store::default();
     let module = Module::new(&store, wasm_bytes).unwrap();
