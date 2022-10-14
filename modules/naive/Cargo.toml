@@ -7,4 +7,4 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-# wasm2048 = { path = "../.." }
+wasm2048 = { path = "../..", default-features = false }

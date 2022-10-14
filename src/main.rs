@@ -1,16 +1,14 @@
-use wasmer::{imports, Instance, Module, Store, MemoryView};
+use wasmer::{Module, Store};
+use wasm2048::Action;
+use wasm2048::agent::WasmAgent;
 
 fn main() {
-    let path = "target/wasm32-unknown-unknown/debug/naive.wasm";
-    let wasm_bytes = std::fs::read(&path).unwrap();
+    let path = std::path::Path::new("./target/wasm32-unknown-unknown/debug/naive.wasm");
     let store = Store::default();
-    let module = Module::new(&store, wasm_bytes).unwrap();
-    let instance = Instance::new(&module, &imports! {}).unwrap();
-    let memory = instance.exports.get_memory("memory").unwrap();
-    let memory_view: MemoryView<u8> = memory.view();
-    println!("Memory View Size = {}", memory_view.len() / 65536);
-    let evaluate = instance.exports.get_function("evaluate").unwrap();
-    let result = evaluate.call(&[]).unwrap();
-    println!("Result = {:?}", result[0]);
+    let module = Module::from_file(&store, path).unwrap();
+    let agent = WasmAgent::new(&module);
+    let result = agent.wasm_evaluate.call(Action::Left).unwrap();
+    println!("Result = {:?}", result);
+    agent.wasm_update.call(0, Action::Left).unwrap();
 }
 

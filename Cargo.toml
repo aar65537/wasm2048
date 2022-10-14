@@ -6,7 +6,11 @@ edition = "2021"
 [lib]
 
 [workspace]
-members = ["agents/naive"]
+members = ["modules/*"]
+
+[features]
+default = ["engine"]
+engine = ["dep:wasmer"]
 
 [dependencies]
-wasmer = "2.3.0"
+wasmer = { version = "2.3.0", optional = true }
