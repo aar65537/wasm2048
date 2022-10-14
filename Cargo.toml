@@ -1,0 +1,9 @@
+[package]
+name = "wasm2048"
+version = "0.0.1"
+edition = "2021"
+
+[workspace]
+
+[dependencies]
+wasmer = "2.3.0"
