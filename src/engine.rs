@@ -2,10 +2,11 @@ mod agent;
 
 pub use agent::WasmAgent;
 
-use wasmer::{FromToNativeWasmType, Instance, Global, ValueType};
 use crate::{Action, Register};
+use std::mem::size_of;
+use wasmer::{FromToNativeWasmType, Instance, MemoryView, ValueType};
 
-unsafe impl FromToNativeWasmType for Action{
+unsafe impl FromToNativeWasmType for Action {
     type Native = i32;
 
     fn from_native(native: Self::Native) -> Self {
@@ -14,7 +15,7 @@ unsafe impl FromToNativeWasmType for Action{
             1 => Action::Up,
             2 => Action::Right,
             3 => Action::Down,
-            _ => Action::Null
+            _ => Action::Null,
         }
     }
 
@@ -25,22 +26,36 @@ unsafe impl FromToNativeWasmType for Action{
 
 unsafe impl ValueType for Register {}
 
+#[derive(Debug)]
 pub struct Engine {
-    // register: &'a Register,
+    register: Register,
 }
 
-impl<'a> Engine {
-
-    pub fn new(instance: &'a Instance) -> Self {
-        let board: &'a Global = instance.exports.get_global("BOARD").unwrap();
-        let board_type = board.ty();
-        let board_value = board.get();
+impl Engine {
+    pub fn new(instance: &Instance) -> Self {
         let memory = instance.exports.get_memory("memory").unwrap();
-        let binding = memory.view::<u8>();
-        let view = binding.get(1048576);
-        println!("Board type = {:?}", board_type);
-        println!("Board value = {:?}", board_value);
-        println!("Board = {:?}", view);
-        Engine {}
+        let register_global = instance.exports.get_global("BOARD").unwrap();
+        let register_addr = register_global.get().i32().unwrap() as usize;
+        println!("Register address is {:x}", register_addr);
+        println!("Size of register is {}", size_of::<Register>());
+        let register_binding: MemoryView<Register> = memory.view::<Register>();
+        let register = register_binding
+            .get(register_addr / size_of::<Register>())
+            .unwrap()
+            .get();
+        let mut engine = Engine { register };
+        engine.new_game();
+        println!("Engine is {:?}", engine);
+        engine
+    }
+
+    pub fn new_game(&mut self) {
+        self.register.clear();
+        self.add_tile();
+        self.add_tile();
+    }
+
+    pub fn add_tile(&mut self) {
+        self.register.left[0][0] = 1;
     }
 }
