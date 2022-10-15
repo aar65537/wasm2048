@@ -1,9 +1,11 @@
+use std::path::Path;
 use wasmer::{Module, Store};
 use wasm2048::Action;
-use wasm2048::agent::WasmAgent;
+use wasm2048::engine::WasmAgent;
 
 fn main() {
-    let path = std::path::Path::new("./target/wasm32-unknown-unknown/debug/naive.wasm");
+    let path_str = "./target/wasm32-unknown-unknown/debug/naive.wasm";
+    let path = Path::new(path_str);
     let store = Store::default();
     let module = Module::from_file(&store, path).unwrap();
     let agent = WasmAgent::new(&module);
