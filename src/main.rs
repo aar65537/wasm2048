@@ -12,5 +12,6 @@ fn main() {
     let result = agent.wasm_evaluate.call(Action::Left).unwrap();
     println!("Result = {:?}", result);
     agent.wasm_update.call(0, Action::Left).unwrap();
+    // println!("Engine is {:?}", agent.engine);
 }
 

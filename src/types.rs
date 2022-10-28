@@ -1,3 +1,5 @@
+use crate::{Board, EMPTY_BOARD};
+
 #[repr(C)]
 pub enum Action {
     Left,
@@ -7,9 +9,6 @@ pub enum Action {
     Null,
 }
 
-type Board = [[u32; 4]; 4];
-const DEFAULT_BOARD: Board = [[0; 4]; 4];
-
 #[derive(Clone, Copy, Debug)]
 #[repr(C)]
 pub struct Register {
@@ -17,19 +16,23 @@ pub struct Register {
     pub up: Board,
     pub right: Board,
     pub down: Board,
+    pub null: Board,
 }
 
 impl Register {
     pub const fn default() -> Self {
         Register {
-            left: DEFAULT_BOARD,
-            up: DEFAULT_BOARD,
-            right: DEFAULT_BOARD,
-            down: DEFAULT_BOARD,
+            left: EMPTY_BOARD,
+            up: EMPTY_BOARD,
+            right: EMPTY_BOARD,
+            down: EMPTY_BOARD,
+            null: EMPTY_BOARD,
         }
     }
 
-    pub fn clear(&mut self) {
+    pub fn clear(&mut self) {}
 
+    pub fn add_tile(&mut self) {
+        self.left[0][0] = 1;
     }
 }

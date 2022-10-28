@@ -10,7 +10,7 @@ pub struct WasmAgent {
     pub wasm_update: NativeFunc<(i32, Action), ()>,
 }
 
-impl WasmAgent {
+impl<'a> WasmAgent {
     pub fn new(module: &Module) -> Self {
         let instance = Instance::new(&module, &imports! {}).unwrap();
         let engine = Engine::new(&instance);
